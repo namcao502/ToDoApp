@@ -21,4 +21,7 @@ interface TaskDao {
     @Query("SELECT * FROM task WHERE title LIKE :query OR description LIKE :query")
     fun searchTasks(query: String): Flow<List<Task>>
 
+    @Query("DELETE FROM task")
+    fun deleteAllTasks()
+
 }

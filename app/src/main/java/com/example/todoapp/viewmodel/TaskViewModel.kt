@@ -1,5 +1,6 @@
 package com.example.todoapp.viewmodel
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
@@ -14,7 +15,11 @@ import javax.inject.Inject
 @HiltViewModel
 class TaskViewModel @Inject constructor(private val repository: TaskRepository): ViewModel() {
 
-    val readAllTasks = repository.readAllTasks().asLiveData()
+//    val readAllTasks = repository.readAllTasks().asLiveData()
+
+    fun readAllTasks(): LiveData<List<Task>>{
+        return repository.readAllTasks()
+    }
 
     fun addTask(task: Task){
         viewModelScope.launch(Dispatchers.IO) {
@@ -28,13 +33,19 @@ class TaskViewModel @Inject constructor(private val repository: TaskRepository):
         }
     }
 
+    fun deleteAllTasks(){
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.deleteAllTasks()
+        }
+    }
+
     fun updateTask(task: Task){
         viewModelScope.launch(Dispatchers.IO) {
             repository.updateTask(task)
         }
     }
 
-    fun searchTask(query: String): Flow<List<Task>>{
+    fun searchTask(query: String): LiveData<List<Task>>{
         return repository.searchTask(query)
     }
 

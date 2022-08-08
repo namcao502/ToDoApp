@@ -15,7 +15,6 @@ import com.example.todoapp.viewmodel.TaskViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_add.*
 import kotlinx.android.synthetic.main.fragment_add.view.*
-import kotlinx.android.synthetic.main.fragment_task.view.*
 
 @AndroidEntryPoint
 class AddFragment : Fragment() {
@@ -38,8 +37,8 @@ class AddFragment : Fragment() {
     }
 
     private fun addTask() {
-        val title = title_et.text.toString()
-        val des = description_et.text.toString()
+        val title = title_et_add.text.toString()
+        val des = description_et_add.text.toString()
 
         if (isValid(title, des)){
             val task = Task(title, des, 0)
@@ -52,7 +51,7 @@ class AddFragment : Fragment() {
     }
 
     private fun isValid(title: String, des: String): Boolean{
-        return !(TextUtils.isEmpty(title) || TextUtils.isEmpty(des))
+        return !(TextUtils.isEmpty(title)) && !(TextUtils.isEmpty(des))
     }
 
 }

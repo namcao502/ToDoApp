@@ -33,7 +33,7 @@ class TaskFragmentAdapter: RecyclerView.Adapter<TaskFragmentAdapter.ViewHolder>(
         holder.itemView.des_txt.text = currentItem.description
 
         holder.itemView.setOnClickListener {
-            val action = TaskFragmentDirections.actionTaskFragmentToUpdateFragment()
+            val action = TaskFragmentDirections.actionTaskFragmentToUpdateFragment(currentItem)
             holder.itemView.findNavController().navigate(action)
         }
 
