@@ -57,18 +57,18 @@ class TaskFragment : Fragment() {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
 
                 menuInflater.inflate(R.menu.menu_main, menu)
-                val search = menu.findItem(R.id.search)
-                val searchView = search?.actionView as? SearchView
-                searchView?.isSubmitButtonEnabled = true
-                searchView?.setOnQueryTextListener(this)
+//                val search = menu.findItem(R.id.search)
+//                val searchView = search?.actionView as? SearchView
+//                searchView?.isSubmitButtonEnabled = true
+//                searchView?.setOnQueryTextListener(this)
 
             }
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 when(menuItem.itemId){
                     R.id.delete -> deleteAllTasks()
-                    R.id.search -> {
-
-                    }
+//                    R.id.search -> {
+//
+//                    }
                 }
                 return false
             }

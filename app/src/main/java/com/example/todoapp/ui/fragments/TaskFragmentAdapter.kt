@@ -1,5 +1,6 @@
 package com.example.todoapp.ui.fragments
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -39,6 +40,7 @@ class TaskFragmentAdapter: RecyclerView.Adapter<TaskFragmentAdapter.ViewHolder>(
 
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun setData(user: List<Task>){
         this.taskList = user
         notifyDataSetChanged()

@@ -10,7 +10,7 @@ import javax.inject.Inject
 class TaskRepository @Inject constructor(private val taskDao: TaskDao) {
 
     fun readAllTasks(): LiveData<List<Task>>{
-        return taskDao.readAllTasks().asLiveData()
+        return taskDao.readAllTasks()
     }
 
     suspend fun addTask(task: Task) {
@@ -30,7 +30,7 @@ class TaskRepository @Inject constructor(private val taskDao: TaskDao) {
     }
 
     fun searchTask(query: String): LiveData<List<Task>>{
-        return taskDao.searchTasks(query).asLiveData()
+        return taskDao.searchTasks(query)
     }
 
 }
