@@ -1,6 +1,8 @@
 package com.example.todoapp.ui.fragments
 
 import android.app.AlertDialog
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.*
@@ -18,6 +20,8 @@ import com.example.todoapp.model.Task
 import com.example.todoapp.viewmodel.TaskViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.util.*
 
 @AndroidEntryPoint
 class UpdateFragment : Fragment() {
@@ -46,11 +50,53 @@ class UpdateFragment : Fragment() {
 
         binding.doneCb.isChecked = args.task.done
 
-        binding.dateCreatedTxt.text = "Date created: ".plus(args.task.date)
+        binding.createdTxt.text = "Created: ".plus(args.task.date)
+
+        val date = args.task.date_done.substring(0, 12)
+        val time = args.task.date_done.substring(13)
+
+        binding.completeDateTxt.text = date
+        binding.completeTimeTxt.text = time
 
         binding.updateBtn.setOnClickListener {
-            updateTask()
+            if (!updateTask()){
+                return@setOnClickListener
+            }
             findNavController().navigate(R.id.taskFragment)
+        }
+
+        binding.completeDateTxt.setOnClickListener {
+
+            val cal = Calendar.getInstance()
+            val year = cal.get(Calendar.YEAR)
+            val month = cal.get(Calendar.MONTH)
+            val day = cal.get(Calendar.DAY_OF_MONTH)
+
+            DatePickerDialog(
+                requireContext(),
+                DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
+                    cal.set(Calendar.YEAR, year)
+                    cal.set(Calendar.MONTH, monthOfYear)
+                    cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+
+                    val sdf = SimpleDateFormat("MMM dd, yyyy")
+                    binding.completeDateTxt.text = sdf.format(cal.time)
+
+                }, year, month, day).show()
+        }
+
+        binding.completeTimeTxt.setOnClickListener {
+
+            val mcurrentTime = Calendar.getInstance()
+            val hour = mcurrentTime[Calendar.HOUR_OF_DAY]
+            val minute = mcurrentTime[Calendar.MINUTE]
+
+            TimePickerDialog(
+                requireContext(),
+                TimePickerDialog.OnTimeSetListener { timePicker, selectedHour, selectedMinute ->
+                    binding.completeTimeTxt.text = "$selectedHour:$selectedMinute"
+                }, hour, minute,
+                true).show()
         }
 
         createMenu()
@@ -58,30 +104,28 @@ class UpdateFragment : Fragment() {
         return view
     }
 
-    private fun updateTask() {
-
-        //keep date information
+    private fun updateTask(): Boolean {
         val title = binding.titleEt.text.toString()
-//        val date = DateFormat.getDateTimeInstance().format(System.currentTimeMillis())
-        val date = args.task.date
-
         var important = false
+        val createDate = args.task.date
+
+        val completeDate = binding.completeDateTxt.text.toString()
+        val completeTime = binding.completeTimeTxt.text.toString()
+
         if (binding.importantCb.isChecked) {
             important = true
         }
 
-        var done = false
-        if (binding.doneCb.isChecked) {
-            done = true
-        }
-
-        if (isValid(title)){
-            val updatedTask = Task(title, date, important, done, args.task.id)
-            taskViewModel.updateTask(updatedTask)
-            Toast.makeText(requireContext(), "Updated!!!", Toast.LENGTH_LONG).show()
+        if (isValid(title, completeDate, completeTime, createDate)){
+            val completeDateTime = completeDate.plus(" ".plus(completeTime))
+            val task = Task(title, createDate, important, false, completeDateTime,0)
+            taskViewModel.updateTask(task)
+            Toast.makeText(requireContext(), "Added!!!", Toast.LENGTH_LONG).show()
+            return true
         }
         else {
             Toast.makeText(requireContext(), "Invalid Input!!!", Toast.LENGTH_LONG).show()
+            return false
         }
     }
 
@@ -100,8 +144,17 @@ class UpdateFragment : Fragment() {
         builder.create().show()
     }
 
-    private fun isValid(title: String): Boolean{
-        return !(TextUtils.isEmpty(title))
+    private fun isValid(title: String, completeDate: String, completeTime: String, createDate: String): Boolean{
+
+        val sdf = SimpleDateFormat("MMM dd, yyyy")
+
+        return if (completeDate == "Date" || completeTime == "Time"){
+            false
+        } else {
+            val create = sdf.parse(createDate)
+            val complete = sdf.parse(completeDate)
+            !((TextUtils.isEmpty(title)) || (complete < create))
+        }
     }
 
     private fun createMenu(){

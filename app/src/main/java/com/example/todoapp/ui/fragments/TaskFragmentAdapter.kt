@@ -33,7 +33,8 @@ class TaskFragmentAdapter(private val itemClickListener: ItemClickListener): Rec
 
         holder.itemView.title_txt.text = currentItem.title
         holder.itemView.done_cb.isChecked = currentItem.done
-        holder.itemView.date_txt.text = currentItem.date
+        holder.itemView.complete_date_txt.text = "Complete: ".plus(currentItem.date_done)
+        holder.itemView.create_date_txt.text = "Created: ".plus(currentItem.date)
 
         if (currentItem.important){
             holder.itemView.important_img.visibility = View.VISIBLE

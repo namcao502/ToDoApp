@@ -13,6 +13,7 @@ data class Task(
     val date: String,
     val important: Boolean = false,
     var done: Boolean = false,
+    var date_done: String,
     @PrimaryKey(autoGenerate = true)
     val id: Int
 ): Parcelable
