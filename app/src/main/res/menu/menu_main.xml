@@ -2,16 +2,34 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-<!--    <item-->
-<!--        android:id="@+id/search"-->
-<!--        android:title="@string/search"-->
-<!--        app:showAsAction="ifRoom"-->
-<!--        android:icon="@drawable/ic_baseline_search_24"/>-->
+    <item
+        android:id="@+id/main_hide"
+        android:title="@string/hide_completed_tasks"
+        android:checkable="true"/>
 
     <item
-        android:id="@+id/delete"
-        android:title="@string/delete"
+        android:id="@+id/main_important"
+        android:title="@string/show_important_tasks"
+        android:checkable="true"/>
+
+    <item
+        android:id="@+id/main_search"
+        android:title="@string/search"
         app:showAsAction="ifRoom"
-        android:icon="@drawable/ic_baseline_delete_24"/>
+        android:icon="@drawable/ic_baseline_search_24"
+        app:actionViewClass="android.widget.SearchView"/>
+
+    <item
+        android:id="@+id/main_sort_title"
+        android:title="@string/sort_by_name" />
+
+    <item
+        android:id="@+id/main_sort_date"
+        android:title="@string/sort_by_date" />
+
+    <item
+        android:id="@+id/main_delete"
+        android:title="@string/delete" />
+
 
 </menu>

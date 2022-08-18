@@ -33,4 +33,20 @@ class TaskRepository @Inject constructor(private val taskDao: TaskDao) {
         return taskDao.searchTasks(query)
     }
 
+    fun hideCompletedTasks(): LiveData<List<Task>>{
+        return taskDao.hideCompletedTasks()
+    }
+
+    fun showImportantTasks(): LiveData<List<Task>>{
+        return taskDao.showImportantTasks()
+    }
+
+    fun sortTitleTask(): LiveData<List<Task>>{
+        return taskDao.sortTitleTask()
+    }
+
+    fun sortDateTask(): LiveData<List<Task>>{
+        return taskDao.sortDateTask()
+    }
+
 }

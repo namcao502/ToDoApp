@@ -20,7 +20,7 @@ object DatabaseModule {
         context,
         Database::class.java,
         "Database"
-    ).build()
+    ).fallbackToDestructiveMigration().build()
 
     @Singleton
     @Provides

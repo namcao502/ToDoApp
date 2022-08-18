@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface TaskDao {
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addTask(task: Task)
 
     @Delete
@@ -19,10 +19,22 @@ interface TaskDao {
     @Query("SELECT * FROM task ORDER BY title ASC")
     fun readAllTasks(): LiveData<List<Task>>
 
-    @Query("SELECT * FROM task WHERE title LIKE :query OR description LIKE :query")
+    @Query("SELECT * FROM task WHERE title LIKE :query OR date LIKE :query")
     fun searchTasks(query: String): LiveData<List<Task>>
 
     @Query("DELETE FROM task")
     fun deleteAllTasks()
+
+    @Query("SELECT * FROM task WHERE done != 1")
+    fun hideCompletedTasks(): LiveData<List<Task>>
+
+    @Query("SELECT * FROM task WHERE important == 1")
+    fun showImportantTasks(): LiveData<List<Task>>
+
+    @Query("SELECT * FROM task ORDER BY title ASC")
+    fun sortTitleTask(): LiveData<List<Task>>
+
+    @Query("SELECT * FROM task ORDER BY title DESC")
+    fun sortDateTask(): LiveData<List<Task>>
 
 }

@@ -13,13 +13,11 @@ import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.todoapp.R
+import com.example.todoapp.databinding.FragmentUpdateBinding
 import com.example.todoapp.model.Task
 import com.example.todoapp.viewmodel.TaskViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_add.view.description_et_add
-import kotlinx.android.synthetic.main.fragment_add.view.title_et_add
-import kotlinx.android.synthetic.main.fragment_update.*
-import kotlinx.android.synthetic.main.fragment_update.view.*
+import java.text.DateFormat
 
 @AndroidEntryPoint
 class UpdateFragment : Fragment() {
@@ -28,17 +26,29 @@ class UpdateFragment : Fragment() {
 
     private val taskViewModel: TaskViewModel by viewModels()
 
+    private var _binding: FragmentUpdateBinding? = null
+    // This property is only valid between onCreateView and
+    // onDestroyView.
+    private val binding get() = _binding!!
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
-        val view =  inflater.inflate(R.layout.fragment_update, container, false)
+        _binding = FragmentUpdateBinding.inflate(layoutInflater, container, false)
 
-        view.title_et_update.setText(args.task.title)
-        view.description_et_update.setText(args.task.description)
+        val view = binding.root
 
-        view.update_btn.setOnClickListener {
+        binding.titleEt.setText(args.task.title)
+
+        binding.importantCb.isChecked = args.task.important
+
+        binding.doneCb.isChecked = args.task.done
+
+        binding.dateCreatedTxt.text = "Date created: ".plus(args.task.date)
+
+        binding.updateBtn.setOnClickListener {
             updateTask()
             findNavController().navigate(R.id.taskFragment)
         }
@@ -50,11 +60,23 @@ class UpdateFragment : Fragment() {
 
     private fun updateTask() {
 
-        val title = title_et_update.text.toString()
-        val des = description_et_update.text.toString()
+        //keep date information
+        val title = binding.titleEt.text.toString()
+//        val date = DateFormat.getDateTimeInstance().format(System.currentTimeMillis())
+        val date = args.task.date
 
-        if (isValid(title, des)){
-            val updatedTask = Task(title, des, args.task.id)
+        var important = false
+        if (binding.importantCb.isChecked) {
+            important = true
+        }
+
+        var done = false
+        if (binding.doneCb.isChecked) {
+            done = true
+        }
+
+        if (isValid(title)){
+            val updatedTask = Task(title, date, important, done, args.task.id)
             taskViewModel.updateTask(updatedTask)
             Toast.makeText(requireContext(), "Updated!!!", Toast.LENGTH_LONG).show()
         }
@@ -78,8 +100,8 @@ class UpdateFragment : Fragment() {
         builder.create().show()
     }
 
-    private fun isValid(title: String, des: String): Boolean{
-        return !(TextUtils.isEmpty(title)) && !(TextUtils.isEmpty(des))
+    private fun isValid(title: String): Boolean{
+        return !(TextUtils.isEmpty(title))
     }
 
     private fun createMenu(){
@@ -106,6 +128,11 @@ class UpdateFragment : Fragment() {
             }
 
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
 }

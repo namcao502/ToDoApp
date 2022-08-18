@@ -4,17 +4,18 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CompoundButton
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.todoapp.R
 import com.example.todoapp.model.Task
 import kotlinx.android.synthetic.main.row_task.view.*
 
-class TaskFragmentAdapter: RecyclerView.Adapter<TaskFragmentAdapter.ViewHolder>() {
+class TaskFragmentAdapter(private val itemClickListener: ItemClickListener): RecyclerView.Adapter<TaskFragmentAdapter.ViewHolder>() {
 
-    private var taskList = emptyList<Task>()
+    var taskList = emptyList<Task>()
 
-    class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {}
+    class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
@@ -31,12 +32,26 @@ class TaskFragmentAdapter: RecyclerView.Adapter<TaskFragmentAdapter.ViewHolder>(
         val currentItem = taskList[position]
 
         holder.itemView.title_txt.text = currentItem.title
-        holder.itemView.des_txt.text = currentItem.description
+        holder.itemView.done_cb.isChecked = currentItem.done
+        holder.itemView.date_txt.text = currentItem.date
+
+        if (currentItem.important){
+            holder.itemView.important_img.visibility = View.VISIBLE
+        }
+        else {
+            holder.itemView.important_img.visibility = View.GONE
+        }
 
         holder.itemView.setOnClickListener {
             val action = TaskFragmentDirections.actionTaskFragmentToUpdateFragment(currentItem)
             holder.itemView.findNavController().navigate(action)
         }
+
+        holder.itemView.done_cb.setOnCheckedChangeListener(object : CompoundButton.OnCheckedChangeListener{
+            override fun onCheckedChanged(p0: CompoundButton?, p1: Boolean) {
+                itemClickListener.onClick(p1, currentItem)
+            }
+        })
 
     }
 
@@ -45,4 +60,9 @@ class TaskFragmentAdapter: RecyclerView.Adapter<TaskFragmentAdapter.ViewHolder>(
         this.taskList = user
         notifyDataSetChanged()
     }
+
+    interface ItemClickListener{
+        fun onClick(check: Boolean, task: Task)
+    }
+
 }

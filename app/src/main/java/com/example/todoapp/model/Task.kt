@@ -1,6 +1,7 @@
 package com.example.todoapp.model
 
 import android.os.Parcelable
+import android.text.format.DateFormat
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.android.parcel.Parcelize
@@ -9,7 +10,9 @@ import kotlinx.android.parcel.Parcelize
 @Entity(tableName = "task")
 data class Task(
     val title: String,
-    val description: String,
+    val date: String,
+    val important: Boolean = false,
+    var done: Boolean = false,
     @PrimaryKey(autoGenerate = true)
     val id: Int
 ): Parcelable

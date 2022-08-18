@@ -10,38 +10,51 @@ import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.todoapp.R
+import com.example.todoapp.databinding.FragmentAddBinding
 import com.example.todoapp.model.Task
 import com.example.todoapp.viewmodel.TaskViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_add.*
-import kotlinx.android.synthetic.main.fragment_add.view.*
+import java.text.DateFormat
 
 @AndroidEntryPoint
 class AddFragment : Fragment() {
 
     private val taskViewModel: TaskViewModel by viewModels()
 
+    private var _binding: FragmentAddBinding? = null
+    // This property is only valid between onCreateView and
+    // onDestroyView.
+    private val binding get() = _binding!!
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
-        val view =  inflater.inflate(R.layout.fragment_add, container, false)
+        _binding = FragmentAddBinding.inflate(layoutInflater, container, false)
 
-        view.add_btn.setOnClickListener {
+        binding.dateCreatedTxt.text = DateFormat.getDateTimeInstance().format(System.currentTimeMillis())
+
+        binding.addBtn.setOnClickListener {
             addTask()
             findNavController().navigate(R.id.taskFragment)
         }
 
-        return view
+        return binding.root
     }
 
     private fun addTask() {
-        val title = title_et_add.text.toString()
-        val des = description_et_add.text.toString()
 
-        if (isValid(title, des)){
-            val task = Task(title, des, 0)
+        val title = binding.titleEt.text.toString()
+        var important = false
+        val date = DateFormat.getDateTimeInstance().format(System.currentTimeMillis())
+
+        if (binding.importantCb.isChecked) {
+            important = true
+        }
+
+        if (isValid(title)){
+            val task = Task(title, date, important, false,0)
             taskViewModel.addTask(task)
             Toast.makeText(requireContext(), "Added!!!", Toast.LENGTH_LONG).show()
         }
@@ -50,8 +63,13 @@ class AddFragment : Fragment() {
         }
     }
 
-    private fun isValid(title: String, des: String): Boolean{
-        return !(TextUtils.isEmpty(title)) && !(TextUtils.isEmpty(des))
+    private fun isValid(title: String): Boolean{
+        return !(TextUtils.isEmpty(title))
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
 }
