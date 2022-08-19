@@ -26,8 +26,7 @@ class AddFragment : Fragment() {
     private val taskViewModel: TaskViewModel by viewModels()
 
     private var _binding: FragmentAddBinding? = null
-    // This property is only valid between onCreateView and
-    // onDestroyView.
+    // This property is only valid between onCreateView and onDestroyView.
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -36,8 +35,6 @@ class AddFragment : Fragment() {
     ): View {
         // Inflate the layout for this fragment
         _binding = FragmentAddBinding.inflate(layoutInflater, container, false)
-
-//        binding.dateCreatedTxt.text = DateFormat.getDateTimeInstance().format(System.currentTimeMillis())
 
         binding.addBtn.setOnClickListener {
             if (!addTask()){
@@ -68,14 +65,19 @@ class AddFragment : Fragment() {
 
         binding.completeTimeTxt.setOnClickListener {
 
-            val mcurrentTime = Calendar.getInstance()
-            val hour = mcurrentTime[Calendar.HOUR_OF_DAY]
-            val minute = mcurrentTime[Calendar.MINUTE]
+            val currentTime = Calendar.getInstance()
+            val hour = currentTime[Calendar.HOUR_OF_DAY]
+            val minute = currentTime[Calendar.MINUTE]
 
             TimePickerDialog(
                 requireContext(),
                 TimePickerDialog.OnTimeSetListener { timePicker, selectedHour, selectedMinute ->
-                    binding.completeTimeTxt.text = "$selectedHour:$selectedMinute"
+                    if (selectedHour < 10){
+                        binding.completeTimeTxt.text = "0$selectedHour:$selectedMinute"
+                    }
+                    else {
+                        binding.completeTimeTxt.text = "$selectedHour:$selectedMinute"
+                    }
                 }, hour, minute,
                 true).show()
         }
@@ -96,26 +98,23 @@ class AddFragment : Fragment() {
             important = true
         }
 
-        if (isValid(title, completeDate, completeTime, createDate)){
+        return if (isValid(title, completeDate, completeTime, createDate)){
             val completeDateTime = completeDate.plus(" ".plus(completeTime))
             val task = Task(title, createDate, important, false, completeDateTime,0)
             taskViewModel.addTask(task)
             Toast.makeText(requireContext(), "Added!!!", Toast.LENGTH_LONG).show()
-            return true
-        }
-        else {
+            true
+        } else {
             Toast.makeText(requireContext(), "Invalid Input!!!", Toast.LENGTH_LONG).show()
-            return false
+            false
         }
     }
 
     private fun isValid(title: String, completeDate: String, completeTime: String, createDate: String): Boolean{
-
-        val sdf = SimpleDateFormat("MMM dd, yyyy")
-
         return if (completeDate == "Date" || completeTime == "Time"){
             false
         } else {
+            val sdf = SimpleDateFormat("MMM dd, yyyy")
             val create = sdf.parse(createDate)
             val complete = sdf.parse(completeDate)
             !((TextUtils.isEmpty(title)) || (complete < create))

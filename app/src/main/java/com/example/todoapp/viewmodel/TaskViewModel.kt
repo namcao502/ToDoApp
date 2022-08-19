@@ -75,6 +75,14 @@ class TaskViewModel @Inject constructor(private val repository: TaskRepository):
         addTask(task)
     }
 
+    fun countImportantTasks(): Int{
+        return repository.countImportantTasks()
+    }
+
+    fun countNotDoneTasks(): Int{
+        return repository.countNotDoneTasks()
+    }
+
     sealed class TaskEvent{
         data class ShowUndoDeleteTaskMessage(val task: Task): TaskEvent()
     }

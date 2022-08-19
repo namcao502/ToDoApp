@@ -37,4 +37,10 @@ interface TaskDao {
     @Query("SELECT * FROM task ORDER BY title DESC")
     fun sortDateTask(): LiveData<List<Task>>
 
+    @Query("SELECT COUNT(id) FROM task WHERE done == 0")
+    fun countNotDoneTasks(): Int
+
+    @Query("SELECT COUNT(id) FROM task WHERE important == 1")
+    fun countImportantTasks(): Int
+
 }

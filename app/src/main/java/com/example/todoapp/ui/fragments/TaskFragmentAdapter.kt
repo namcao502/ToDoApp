@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.todoapp.R
 import com.example.todoapp.model.Task
 import kotlinx.android.synthetic.main.row_task.view.*
+import java.text.SimpleDateFormat
+import java.util.concurrent.TimeUnit
 
 class TaskFragmentAdapter(private val itemClickListener: ItemClickListener): RecyclerView.Adapter<TaskFragmentAdapter.ViewHolder>() {
 
@@ -35,6 +37,14 @@ class TaskFragmentAdapter(private val itemClickListener: ItemClickListener): Rec
         holder.itemView.done_cb.isChecked = currentItem.done
         holder.itemView.complete_date_txt.text = "Complete: ".plus(currentItem.date_done)
         holder.itemView.create_date_txt.text = "Created: ".plus(currentItem.date)
+
+        val sdf = SimpleDateFormat("MMM dd, yyyy hh:mm")
+        val createDate = sdf.parse(currentItem.date)
+        val completeDate = sdf.parse(currentItem.date_done)
+
+        val millionSeconds = completeDate.time - createDate.time
+
+        holder.itemView.day_left.text = TimeUnit.MILLISECONDS.toDays(millionSeconds).toString() + " day(s) left"
 
         if (currentItem.important){
             holder.itemView.important_img.visibility = View.VISIBLE

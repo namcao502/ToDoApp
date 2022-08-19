@@ -94,7 +94,12 @@ class UpdateFragment : Fragment() {
             TimePickerDialog(
                 requireContext(),
                 TimePickerDialog.OnTimeSetListener { timePicker, selectedHour, selectedMinute ->
-                    binding.completeTimeTxt.text = "$selectedHour:$selectedMinute"
+                    if (selectedHour < 10){
+                        binding.completeTimeTxt.text = "0$selectedHour:$selectedMinute"
+                    }
+                    else {
+                        binding.completeTimeTxt.text = "$selectedHour:$selectedMinute"
+                    }
                 }, hour, minute,
                 true).show()
         }

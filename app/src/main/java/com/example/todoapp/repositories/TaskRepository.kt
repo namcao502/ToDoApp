@@ -49,4 +49,12 @@ class TaskRepository @Inject constructor(private val taskDao: TaskDao) {
         return taskDao.sortDateTask()
     }
 
+    fun countNotDoneTasks(): Int{
+        return taskDao.countNotDoneTasks()
+    }
+
+    fun countImportantTasks(): Int{
+        return taskDao.countImportantTasks()
+    }
+
 }
