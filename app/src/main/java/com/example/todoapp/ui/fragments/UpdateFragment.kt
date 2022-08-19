@@ -112,6 +112,7 @@ class UpdateFragment : Fragment() {
     private fun updateTask(): Boolean {
         val title = binding.titleEt.text.toString()
         var important = false
+        var done = false
         val createDate = args.task.date
 
         val completeDate = binding.completeDateTxt.text.toString()
@@ -121,16 +122,19 @@ class UpdateFragment : Fragment() {
             important = true
         }
 
-        if (isValid(title, completeDate, completeTime, createDate)){
-            val completeDateTime = completeDate.plus(" ".plus(completeTime))
-            val task = Task(title, createDate, important, false, completeDateTime,0)
-            taskViewModel.updateTask(task)
-            Toast.makeText(requireContext(), "Added!!!", Toast.LENGTH_LONG).show()
-            return true
+        if (binding.doneCb.isChecked){
+            done = true
         }
-        else {
+
+        return if (isValid(title, completeDate, completeTime, createDate)){
+            val completeDateTime = completeDate.plus(" ".plus(completeTime))
+            val task = Task(title, createDate, important, done, completeDateTime, args.task.id)
+            taskViewModel.updateTask(task)
+            Toast.makeText(requireContext(), "Updated!!!", Toast.LENGTH_LONG).show()
+            true
+        } else {
             Toast.makeText(requireContext(), "Invalid Input!!!", Toast.LENGTH_LONG).show()
-            return false
+            false
         }
     }
 

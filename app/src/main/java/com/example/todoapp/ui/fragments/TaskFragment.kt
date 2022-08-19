@@ -116,8 +116,8 @@ class TaskFragment : Fragment(), TaskFragmentAdapter.ItemClickListener {
     {
         val calendar = Calendar.getInstance()
         calendar.set(Calendar.HOUR_OF_DAY, 13)
-        calendar.set(Calendar.MINUTE, 8)
-        calendar.set(Calendar.SECOND, 0)
+        calendar.set(Calendar.MINUTE, 23)
+        calendar.set(Calendar.SECOND, 1)
 
         val message = "You have ${taskViewModel.countNotDoneTasks()} uncompleted task(s) and ${taskViewModel.countImportantTasks()} important task(s)"
 
@@ -135,9 +135,10 @@ class TaskFragment : Fragment(), TaskFragmentAdapter.ItemClickListener {
         )
 
         val alarmManager = requireActivity().getSystemService(ALARM_SERVICE) as AlarmManager
-        alarmManager.setExactAndAllowWhileIdle(
+        alarmManager.setRepeating(
             AlarmManager.RTC_WAKEUP,
             calendar.timeInMillis,
+            AlarmManager.INTERVAL_DAY,
             pendingIntent)
     }
 
