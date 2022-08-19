@@ -25,7 +25,7 @@ interface TaskDao {
     @Query("DELETE FROM task")
     fun deleteAllTasks()
 
-    @Query("SELECT * FROM task WHERE done != 1")
+    @Query("SELECT * FROM task WHERE done == 0")
     fun hideCompletedTasks(): LiveData<List<Task>>
 
     @Query("SELECT * FROM task WHERE important == 1")

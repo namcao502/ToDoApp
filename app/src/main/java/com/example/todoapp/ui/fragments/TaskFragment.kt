@@ -119,27 +119,30 @@ class TaskFragment : Fragment(), TaskFragmentAdapter.ItemClickListener {
         calendar.set(Calendar.MINUTE, 23)
         calendar.set(Calendar.SECOND, 1)
 
-        val message = "You have ${taskViewModel.countNotDoneTasks()} uncompleted task(s) and ${taskViewModel.countImportantTasks()} important task(s)"
+        if (taskViewModel.countImportantTasks() == 0 && taskViewModel.countNotDoneTasks() == 0) {
+            return
+        }
+        else {
+            val message = "You have ${taskViewModel.countNotDoneTasks()} uncompleted task(s) and ${taskViewModel.countImportantTasks()} important task(s)"
 
-        Log.i("TAG502", "scheduleNotification: $message")
+            val intent = Intent(requireContext(), Notification::class.java)
+            intent.putExtra(titleExtra, "TODO")
+            intent.putExtra(messageExtra, message)
 
-        val intent = Intent(requireContext(), Notification::class.java)
-        intent.putExtra(titleExtra, "TODO")
-        intent.putExtra(messageExtra, message)
+            val pendingIntent = PendingIntent.getBroadcast(
+                requireContext(),
+                notificationID,
+                intent,
+                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+            )
 
-        val pendingIntent = PendingIntent.getBroadcast(
-            requireContext(),
-            notificationID,
-            intent,
-            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
-        )
-
-        val alarmManager = requireActivity().getSystemService(ALARM_SERVICE) as AlarmManager
-        alarmManager.setRepeating(
-            AlarmManager.RTC_WAKEUP,
-            calendar.timeInMillis,
-            AlarmManager.INTERVAL_DAY,
-            pendingIntent)
+            val alarmManager = requireActivity().getSystemService(ALARM_SERVICE) as AlarmManager
+            alarmManager.setRepeating(
+                AlarmManager.RTC_WAKEUP,
+                calendar.timeInMillis,
+                AlarmManager.INTERVAL_DAY,
+                pendingIntent)
+        }
     }
 
     private fun createNotificationChannel()
