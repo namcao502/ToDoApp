@@ -169,34 +169,34 @@ class TaskFragment : Fragment(), TaskFragmentAdapter.ItemClickListener {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                 menuInflater.inflate(R.menu.menu_main, menu)
 
-                val search = menu.findItem(R.id.main_search)
-                val searchView = search?.actionView as? SearchView
-
-                searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-
-                    override fun onQueryTextSubmit(query: String?): Boolean {
-                        if (query != null){
-                            searchTask(query)
-                        }
-                        return true
-                    }
-
-                    override fun onQueryTextChange(newText: String?): Boolean {
-                        if (newText != null){
-                            searchTask(newText)
-                        }
-                        return true
-                    }
-
-                })
+//                val search = menu.findItem(R.id.main_search)
+//                val searchView = search?.actionView as? SearchView
+//
+//                searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+//
+//                    override fun onQueryTextSubmit(query: String?): Boolean {
+//                        if (query != null){
+//                            searchTask(query)
+//                        }
+//                        return true
+//                    }
+//
+//                    override fun onQueryTextChange(newText: String?): Boolean {
+//                        if (newText != null){
+//                            searchTask(newText)
+//                        }
+//                        return true
+//                    }
+//
+//                })
 
             }
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 when(menuItem.itemId){
                     R.id.main_delete -> deleteAllTasks()
-                    R.id.main_search -> {
-
-                    }
+//                    R.id.main_search -> {
+//
+//                    }
                     R.id.main_sort_date -> {
                         sortDateTask()
                     }

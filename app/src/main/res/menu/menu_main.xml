@@ -12,12 +12,12 @@
         android:title="@string/show_important_tasks"
         android:checkable="true"/>
 
-    <item
-        android:id="@+id/main_search"
-        android:title="@string/search"
-        app:showAsAction="ifRoom"
-        android:icon="@drawable/ic_baseline_search_24"
-        app:actionViewClass="android.widget.SearchView"/>
+<!--    <item-->
+<!--        android:id="@+id/main_search"-->
+<!--        android:title="@string/search"-->
+<!--        app:showAsAction="ifRoom"-->
+<!--        android:icon="@drawable/ic_baseline_search_24"-->
+<!--        app:actionViewClass="android.widget.SearchView"/>-->
 
     <item
         android:id="@+id/main_sort_title"
